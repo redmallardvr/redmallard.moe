@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Mallard</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#8B0000;--red-mid:#b01010;--red-bright:#cc1111;
+  --black:#080606;--dark:#110909;--surface:#1c1212;
+  --text:#ecdada;--muted:#8a6666;--yellow:#f0c030;
+  --border:rgba(139,0,0,0.3);
+}
+html,body{min-height:100vh;background:var(--black);color:var(--text);font-family:'Crimson Pro',Georgia,serif;overflow-x:hidden}
+body{
+  background:radial-gradient(ellipse 100% 50% at 50% -10%,#2d0505 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 90%,#1a0303 0%,transparent 50%),radial-gradient(ellipse 40% 30% at 90% 70%,#150202 0%,transparent 50%),var(--black);
+  display:flex;flex-direction:column;align-items:center;min-height:100vh;position:relative;
+}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");background-size:300px 300px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.04;background-image:repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(255,200,200,0.15) 3px,rgba(255,200,200,0.15) 4px)}
+.container{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;max-width:640px;padding:3rem 1.5rem 4rem}
+.logo-wrap{width:min(500px,92vw);margin-bottom:1rem;animation:dropIn 1s cubic-bezier(0.16,1,0.3,1) both}
+.logo-wrap img{width:100%;height:auto;filter:drop-shadow(0 0 50px rgba(139,0,0,0.7)) drop-shadow(0 0 100px rgba(139,0,0,0.3))}
+.tagline{font-style:italic;font-weight:300;font-size:clamp(1rem,2.5vw,1.15rem);color:var(--muted);letter-spacing:0.08em;margin-bottom:2.5rem;animation:fadeUp 1s 0.3s cubic-bezier(0.16,1,0.3,1) both}
+.divider{width:100%;display:flex;align-items:center;gap:1rem;margin-bottom:2rem;animation:fadeUp 1s 0.4s cubic-bezier(0.16,1,0.3,1) both}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.divider span{font-size:1.1rem;color:var(--red-mid)}
+.section-label{font-family:'UnifrakturMaguntia',cursive;font-size:1.1rem;color:var(--muted);letter-spacing:0.15em;margin-bottom:0.75rem;align-self:flex-start}
+.links{width:100%;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem;animation:fadeUp 1s 0.5s cubic-bezier(0.16,1,0.3,1) both}
+.link-btn{display:flex;align-items:center;gap:1rem;padding:0.85rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);color:var(--text);text-decoration:none;font-family:'Crimson Pro',Georgia,serif;font-size:1.05rem;font-weight:400;letter-spacing:0.03em;transition:all 0.2s ease;position:relative;overflow:hidden}
+.link-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(139,0,0,0.12),transparent);opacity:0;transition:opacity 0.2s}
+.link-btn:hover{border-color:var(--red-bright);border-left-color:var(--red-bright);color:#fff;transform:translateX(4px)}
+.link-btn:hover::before{opacity:1}
+.link-icon{font-size:1.2rem;min-width:1.5rem;text-align:center}
+.link-label{flex:1}
+.link-sub{font-size:0.8rem;color:var(--muted);font-style:italic}
+.link-arrow{color:var(--red-mid);font-size:1rem;transition:transform 0.2s}
+.link-btn:hover .link-arrow{transform:translateX(3px)}
+.nsfw-wrap{width:100%;margin-bottom:2rem;animation:fadeUp 1s 0.6s cubic-bezier(0.16,1,0.3,1) both}
+.nsfw-toggle{width:100%;display:flex;align-items:center;gap:1rem;padding:0.85rem 1.25rem;background:var(--surface);border:1px solid rgba(139,0,0,0.2);border-left:3px solid #4a0000;color:var(--muted);font-family:'Crimson Pro',Georgia,serif;font-size:1.05rem;cursor:pointer;text-align:left;transition:all 0.2s ease}
+.nsfw-toggle:hover{border-color:var(--red-bright);border-left-color:var(--red-bright);color:var(--text)}
+.badge{background:#4a0000;color:#cc8888;font-size:0.7rem;padding:0.15rem 0.5rem;letter-spacing:0.1em;border:1px solid rgba(139,0,0,0.4)}
+.caret{margin-left:auto;color:var(--red-mid);transition:transform 0.3s ease;font-style:normal}
+.nsfw-toggle[aria-expanded="true"] .caret{transform:rotate(180deg)}
+.nsfw-links{display:none;flex-direction:column;gap:0.6rem;margin-top:0.6rem}
+.nsfw-links.open{display:flex}
+.nsfw-links .link-btn{border-left-color:#7a0000;opacity:0;animation:fadeUp 0.4s ease forwards}
+.nsfw-links .link-btn:nth-child(1){animation-delay:0.05s}
+.nsfw-links .link-btn:nth-child(2){animation-delay:0.1s}
+.nsfw-links .link-btn:nth-child(3){animation-delay:0.15s}
+.nsfw-links .link-btn:nth-child(4){animation-delay:0.2s}
+.footer{margin-top:1rem;font-size:0.8rem;color:#4a3030;letter-spacing:0.05em;font-style:italic;animation:fadeUp 1s 0.8s cubic-bezier(0.16,1,0.3,1) both}
+.duck{position:fixed;pointer-events:none;font-size:1.2rem;z-index:999;transform:translate(-50%,-50%);display:none}
+@keyframes dropIn{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.link-btn{font-size:0.95rem;padding:0.75rem 1rem}.section-label{font-size:0.95rem}}
+</style>
+</head>
+<body>
+<div class="duck" id="duck">🦆</div>
+<div class="container">
+
+  <div class="logo-wrap">
+    <img src="RedMLogo.png" alt="Red Mallard">
+  </div>
+
+  <p class="tagline">girlfail vtuber &nbsp;·&nbsp; 🍒 &nbsp;·&nbsp; 🦆 &nbsp;·&nbsp; coming soon</p>
+
+  <div class="divider"><span>🍒</span></div>
+
+  <p class="section-label">Watch</p>
+  <div class="links">
+    <a class="link-btn" href="https://www.twitch.tv/redmallard_vr" target="_blank" rel="noopener">
+      <span class="link-icon">📺</span><span class="link-label">Twitch</span><span class="link-arrow">→</span>
+    </a>
+    <a class="link-btn" href="https://www.youtube.com/@RedMallardVT" target="_blank" rel="noopener">
+      <span class="link-icon">▶️</span><span class="link-label">YouTube</span><span class="link-arrow">→</span>
+    </a>
+    <a class="link-btn" href="https://www.tiktok.com/@redmallard_vr" target="_blank" rel="noopener">
+      <span class="link-icon">🎵</span><span class="link-label">TikTok</span><span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <p class="section-label">Socials</p>
+  <div class="links">
+    <a class="link-btn" href="https://x.com/redmallard_vr" target="_blank" rel="noopener">
+      <span class="link-icon">𝕏</span><span class="link-label">Twitter / X</span><span class="link-arrow">→</span>
+    </a>
+    <a class="link-btn" href="https://bsky.app/profile/redmallard.bsky.social" target="_blank" rel="noopener">
+      <span class="link-icon">🦋</span><span class="link-label">Bluesky</span><span class="link-arrow">→</span>
+    </a>
+    <a class="link-btn" href="https://pin.it/2YthM2Z1k" target="_blank" rel="noopener">
+      <span class="link-icon">📌</span><span class="link-label">Pinterest</span><span class="link-arrow">→</span>
+    </a>
+    <a class="link-btn" href="https://vgen.co/redmallard/characters" target="_blank" rel="noopener">
+      <span class="link-icon">🎨</span><span class="link-label">VGen <span class="link-sub">· commission my characters</span></span><span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="nsfw-wrap">
+    <button class="nsfw-toggle" aria-expanded="false" onclick="toggleNSFW(this)">
+      <span class="link-icon">🔞</span>
+      <span>18+ Links</span>
+      <span class="badge">NSFW</span>
+      <em class="caret">▾</em>
+    </button>
+    <div class="nsfw-links" id="nsfw-links">
+      <a class="link-btn" href="https://x.com/redmallard_nsfw" target="_blank" rel="noopener">
+        <span class="link-icon">𝕏</span><span class="link-label">Twitter / X <span class="link-sub">· NSFW</span></span><span class="link-arrow">→</span>
+      </a>
+      <a class="link-btn" href="https://bsky.app/profile/redmallardnsfw.bsky.social" target="_blank" rel="noopener">
+        <span class="link-icon">🦋</span><span class="link-label">Bluesky <span class="link-sub">· NSFW</span></span><span class="link-arrow">→</span>
+      </a>
+      <a class="link-btn" href="https://fansly.com/redmallard" target="_blank" rel="noopener">
+        <span class="link-icon">💜</span><span class="link-label">Fansly <span class="link-sub">· streams & content</span></span><span class="link-arrow">→</span>
+      </a>
+      <a class="link-btn" href="https://joystick.tv/redmallard_vr" target="_blank" rel="noopener">
+        <span class="link-icon">🕹️</span><span class="link-label">Joystick.tv</span><span class="link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <p class="footer">🦆 &nbsp; honk &nbsp; 🍒</p>
+
+</div>
+<script>
+function toggleNSFW(btn){
+  const panel=document.getElementById('nsfw-links');
+  const open=btn.getAttribute('aria-expanded')==='true';
+  btn.setAttribute('aria-expanded',String(!open));
+  panel.classList.toggle('open',!open);
+}
+const duck=document.getElementById('duck');
+let shown=false;
+document.addEventListener('mousemove',e=>{
+  if(!shown){duck.style.display='block';shown=true}
+  duck.style.left=e.clientX+'px';
+  duck.style.top=e.clientY+'px';
+});
+</script>
+</body>
+</html>
